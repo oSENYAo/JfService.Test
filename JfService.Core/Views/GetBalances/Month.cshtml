@@ -1,0 +1,54 @@
+﻿@model List<MonthService>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            @Html.ActionLink("За год", "Year", "GetBalances")               <!--need object id-->
+        </div>
+        <div class="col-sm">
+            @Html.ActionLink("За квартал", "Quarter", "GetBalances")
+        </div>
+        <div class="col-sm">
+            @Html.ActionLink("За месяц", "Month", "GetBalances")
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Период</th>
+            <th scope="col">Баланс в начале периода</th>
+            <th scope="col">Начислено</th>
+            <th scope="col">Оплачено</th>
+            <th scope="col">Баланс в конце периода</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.periodMonth.ToString("yyyy:MM")
+                </td>
+                <td>
+                    @item.MonthStartingBalance
+                </td>
+                <td>
+                    @item.MonthAssessed
+                </td>
+                <td>
+                    @item.MonthPaid
+                </td>
+                <td>
+                    @item.MonthFinalBalance
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+
+
+</script>
