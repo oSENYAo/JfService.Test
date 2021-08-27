@@ -1,4 +1,5 @@
-﻿using JFService.Data;
+﻿using JfService.Core.ViewModels;
+using JFService.Data;
 using JFService.Service;
 using JFService.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -21,28 +22,18 @@ namespace JfService.Core.Controllers
             _calculate = calculate;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Year(int accId = 808251)   // need change
+        public async Task<IActionResult> Index(int accId = 808251)
         {
-            var years = await _calculate.Years(accId);
-
-            return View(years);
+            IndexViewModel model = new IndexViewModel();
+            model.Years = await _calculate.Years(accId);
+            model.Quarters = await _calculate.Quarters(accId);
+            model.Months = await _calculate.Monts(accId);
+            return View(model);
+        }
+        public IActionResult ResulTest()
+        {
+            return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Quarter(int accId = 808251)
-        {
-            var quarters = await _calculate.Quarters(accId);
-
-            return View(quarters);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Month(int accId = 808251)
-        {
-            var months = await _calculate.Monts(accId);
-
-            return View(months);
-        }
     }
 }

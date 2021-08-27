@@ -1,0 +1,135 @@
+﻿@model IndexViewModel
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Период
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle bg-info text-body">
+                        <td>За год</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" class="hiddenRow">
+                            <div class="accordian-body collapse" id="demo1">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="info">
+                                            <th>Год</th>
+                                            <th>Баланс в начале периода</th>
+                                            <th>Начислено</th>
+                                            <th>Оплачено</th>
+                                            <th>Баланс в конце периода</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Years)
+                                        {
+                                            <tr>
+                                                <td>@item.periodYear.ToString("yyyy:MM")</td>
+                                                <td>@item.YearStartingBalance</td>
+                                                <td>@item.YearAssessed</td>
+                                                <td>@item.YearPaid</td>
+                                                <td>@item.YearFinalBalance</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-toggle="collapse" data-target="#demo2" class="accordion-toggle bg-info text-body">
+                        <td>За квартал</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" class="hiddenRow">
+                            <div class="accordian-body collapse" id="demo2">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="info">
+                                            <th>Квартал</th>
+                                            <th>Баланс в начале периода</th>
+                                            <th>Начислено</th>
+                                            <th>Оплачено</th>
+                                            <th>Баланс в конце периода</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Quarters)
+                                        {
+                                            <tr>
+                                                <td>@item.periodQuarter.ToString("yyyy:MM")</td>
+                                                <td>@item.QuarterStartingBalance</td>
+                                                <td>@item.QuarterAssessed</td>
+                                                <td>@item.QuarterPaid</td>
+                                                <td>@item.QarterFinalBalance</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-toggle="collapse" data-target="#demo3" class="accordion-toggle bg-info text-body">
+                        <td>За месяц</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-eye-open"></span></button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" class="hiddenRow">
+                            <div class="accordian-body collapse" id="demo3">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="info">
+                                            <th>Месяц</th>
+                                            <th>Баланс в начале периода</th>
+                                            <th>Начислено</th>
+                                            <th>Оплачено</th>
+                                            <th>Баланс в конце периода</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Months)
+                                        {
+                                            <tr>
+                                                <td>@item.periodMonth.ToString("yyyy:MM")</td>
+                                                <td>@item.MonthStartingBalance</td>
+                                                <td>@item.MonthAssessed</td>
+                                                <td>@item.MonthPaid</td>
+                                                <td>@item.MonthFinalBalance</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
