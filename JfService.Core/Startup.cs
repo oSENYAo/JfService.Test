@@ -31,7 +31,7 @@ namespace JfService.Core
         {
             string connectString = Configuration.GetConnectionString("DefaultConnection"); // i used Manage User secrets
             
-            services.AddDbContext<AppDbContext>(x => x.UseSqlServer(connectString));
+            services.AddDbContext<AppDbContext>(x => x.UseSqlServer(connectString, x => x.MigrationsAssembly("JfService.Core")));
             services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<DataManager>();
