@@ -3,9 +3,6 @@ using JFService.Data;
 using JFService.Service;
 using JFService.Shared;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JfService.Core.Controllers
@@ -24,6 +21,7 @@ namespace JfService.Core.Controllers
 
         public async Task<IActionResult> Index(int accId = 808251)
         {
+            await _dataManager.BalanceRepository.UpdateDatabase();
             IndexViewModel model = new IndexViewModel();
             model.Years = await _calculate.Years(accId);
             model.Quarters = await _calculate.Quarters(accId);

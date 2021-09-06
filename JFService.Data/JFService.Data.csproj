@@ -22,4 +22,8 @@
     <ProjectReference Include="..\JFService.Shared\JFService.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Source\" />
+  </ItemGroup>
+
 </Project>

@@ -23,7 +23,6 @@ namespace JFService.Data.EntityFramework
         {
             return await _context.Balances.OrderBy(x => x.DateTimePeriod).FirstOrDefaultAsync(x => x.account_id == accId);
         }
-
         public async Task<Balance> FirstOrderByDescending(int accId)
         {
             return await _context.Balances.OrderByDescending(x => x.DateTimePeriod).FirstOrDefaultAsync(x => x.account_id == accId);
@@ -40,8 +39,8 @@ namespace JFService.Data.EntityFramework
         }
         public async Task UpdateDatabase()
         {
-            string jsonPayment = System.IO.File.ReadAllText(@"~\Source\payment_202105270827.json");
-            string jsonBalance = System.IO.File.ReadAllText(@"~\Source\balance_202105270825.json");
+            string jsonPayment = System.IO.File.ReadAllText(@"C:\Users\Razrab\Source\Repos\JfService.Test\JFService.Data\Source\payment_202105270827.json");
+            string jsonBalance = System.IO.File.ReadAllText(@"C:\Users\Razrab\Source\Repos\JfService.Test\JFService.Data\Source\balance_202105270825.json");
 
 
             List<Payment> payments = new List<Payment>();

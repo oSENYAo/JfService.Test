@@ -2,10 +2,7 @@
 using JFService.Models.Models;
 using JFService.Shared.Abstract;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace JFService.Data.EntityFramework
@@ -22,7 +19,6 @@ namespace JFService.Data.EntityFramework
         {
             return await _context.Payments.OrderBy(x => x.date).FirstOrDefaultAsync(x => x.account_id == accId);
         }
-
         public async Task<Payment> FirstPaymentOrderByDescending(int accId)
         {
             return await _context.Payments.OrderByDescending(x => x.date).FirstOrDefaultAsync(x => x.account_id == accId);
