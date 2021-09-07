@@ -41,7 +41,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Years)
+                                        @foreach (var item in Model.Years.OrderByDescending(x => x.periodYear))
                                         {
                                             <tr>
                                                 <td>@item.periodYear.ToString("yyyy:MM")</td>
@@ -77,7 +77,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Quarters)
+                                        @foreach (var item in Model.Quarters.OrderByDescending(x => x.periodQuarter))
                                         {
                                             <tr>
                                                 <td>@item.periodQuarter.ToString("yyyy:MM")</td>
@@ -113,7 +113,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Months)
+                                        @foreach (var item in Model.Months.OrderByDescending(x => x.periodMonth))
                                         {
                                             <tr>
                                                 <td>@item.periodMonth.ToString("yyyy:MM")</td>

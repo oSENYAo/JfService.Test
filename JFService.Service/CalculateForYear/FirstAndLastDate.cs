@@ -6,8 +6,10 @@ namespace JFService.Service.CalculateForYear
     {
         public DateTime firstYear { get; set; }
         public DateTime lastYear { get; set; }
+        public DateTime lastYearPayments { get; set; }
         public DateTime firstYearPayments { get; set; }
         public DateTime dt { get; set; }
         public DateTime dt2 { get; set; }
+        public decimal InitialBalance { get; set; }
     }
 }

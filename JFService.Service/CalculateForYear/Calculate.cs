@@ -26,24 +26,35 @@ namespace JFService.Service
             List<MonthService> months = new List<MonthService>();
 
             int i = 1;
+            var initBalans = firstAndLastDate.InitialBalance;
+            
             while (firstAndLastDate.firstYear <= firstAndLastDate.lastYear)
             {
                 MonthService month = new MonthService();
-                var result = await _context.Balances.Where(x => x.DateTimePeriod.Month == firstAndLastDate.firstYear.Month).ToListAsync();
-                month.MonthAssessed = result.Select(x => x.calculation).Sum();
-                month.MonthStartingBalance = result.Select(x => x.in_balance).Sum();
+                var yearCount = await _context.Balances.Where(x => x.DateTimePeriod.Month == firstAndLastDate.firstYear.Month).ToListAsync();
+                if (i == 1)
+                    month.MonthStartingBalance = initBalans;
+                else
+                    month.MonthStartingBalance = months.Select(x => x.MonthFinalBalance).LastOrDefault();
+                month.MonthAssessed = yearCount.Where(x => x.DateTimePeriod == firstAndLastDate.firstYear).Select(x => x.calculation).FirstOrDefault();
                 month.periodMonth = firstAndLastDate.firstYear;
 
-                var results = await _context.Payments.Where(x => x.date.Month == firstAndLastDate.firstYearPayments.Month).ToListAsync();
-                month.MonthPaid = results.Select(x => x.sum).Sum();
-                month.MonthFinalBalance = month.MonthStartingBalance + (month.MonthAssessed - month.MonthPaid);
+                var payment = await _context.Payments.Where(x => x.date.Month == firstAndLastDate.firstYear.Month && x.date.Year == firstAndLastDate.firstYear.Year).ToListAsync();
+                
+                if (payment != null)
+                {
+                    month.MonthPaid = payment.Sum(x => x.sum);
+                    month.MonthFinalBalance = month.MonthStartingBalance + (month.MonthAssessed - month.MonthPaid);
+                }
+                else
+                    month.MonthFinalBalance = month.MonthStartingBalance + month.MonthAssessed;
+
                 months.Add(month);
                 firstAndLastDate.firstYear = firstAndLastDate.dt.AddMonths(i);
                 firstAndLastDate.firstYearPayments = firstAndLastDate.dt2.AddMonths(i);
                 i++;
             }
             return months;
-
         }
 
         public async Task<List<QuarterService>> Quarters(int accId)
@@ -53,17 +64,32 @@ namespace JFService.Service
             List<QuarterService> quarters = new List<QuarterService>();
 
             int i = 3;
+            var initBalans = firstAndLastDate.InitialBalance;
+
             while (firstAndLastDate.firstYear <= firstAndLastDate.lastYear)
             {
                 QuarterService quarter = new QuarterService();
-                var result = await _context.Balances.Where(x => x.DateTimePeriod.Month == firstAndLastDate.firstYear.Month).ToListAsync();
-                quarter.QuarterAssessed = result.Select(x => x.calculation).Sum();
-                quarter.QuarterStartingBalance = result.Select(x => x.in_balance).Sum();
+                var yearCount = await _context.Balances.Where(x => x.DateTimePeriod.Month == firstAndLastDate.firstYear.Month).ToListAsync();
+                
+                if (i == 3)
+                    quarter.QuarterStartingBalance = initBalans;
+                else
+                    quarter.QuarterStartingBalance = quarters.Select(x => x.QarterFinalBalance).LastOrDefault();
+                    
+                quarter.QuarterAssessed = yearCount.Where(x => x.DateTimePeriod >= firstAndLastDate.firstYear).Take(3).Select(x => x.calculation).Sum();
                 quarter.periodQuarter = firstAndLastDate.firstYear;
 
-                var results = await _context.Payments.Where(x => x.date.Month == firstAndLastDate.firstYearPayments.Month).ToListAsync();
-                quarter.QuarterPaid = results.Select(x => x.sum).Sum();
-                quarter.QarterFinalBalance = quarter.QuarterStartingBalance + (quarter.QuarterAssessed - quarter.QuarterPaid);
+                var payments = _context.Payments
+                    .Where(x => x.date >= firstAndLastDate.firstYear).Take(3).Select(x => x.sum).Sum();
+                
+                if (true)
+                {
+                    quarter.QuarterPaid = payments;
+                    quarter.QarterFinalBalance = quarter.QuarterStartingBalance + (quarter.QuarterAssessed - quarter.QuarterPaid);
+                }
+                //else
+                //    quarter.QarterFinalBalance = quarter.QuarterStartingBalance + quarter.QuarterAssessed;
+
                 quarters.Add(quarter);
                 firstAndLastDate.firstYear = firstAndLastDate.dt.AddMonths(i);
                 firstAndLastDate.firstYearPayments = firstAndLastDate.dt2.AddMonths(i);
@@ -80,17 +106,32 @@ namespace JFService.Service
             List<YearService> years = new List<YearService>();
 
             int i = 1;
+            var initBalans = firstAndLastDate.InitialBalance;
+
             while (firstAndLastDate.firstYear <= firstAndLastDate.lastYear)
             {
                 YearService ys = new YearService();
-                var result = await _context.Balances.Where(x => x.DateTimePeriod.Year == firstAndLastDate.firstYear.Year).ToListAsync();
-                ys.YearAssessed = result.Select(x => x.calculation).Sum();
-                ys.YearStartingBalance = result.Select(x => x.in_balance).Sum();
+                var yearCount = await _context.Balances.Where(x => x.DateTimePeriod.Year == firstAndLastDate.firstYear.Year).ToListAsync();
+                
+                if (i == 1)
+                    ys.YearStartingBalance = initBalans;
+                else
+                    ys.YearStartingBalance = years.Select(x => x.YearFinalBalance).LastOrDefault();
+
+                ys.YearAssessed = yearCount.Where(x => x.DateTimePeriod == firstAndLastDate.firstYear).Select(x => x.calculation).FirstOrDefault();
                 ys.periodYear = firstAndLastDate.firstYear;
 
-                var results = await _context.Payments.Where(x => x.date.Year == firstAndLastDate.firstYearPayments.Year).ToListAsync();
-                ys.YearPaid = results.Select(x => x.sum).Sum();
-                ys.YearFinalBalance = ys.YearStartingBalance + (ys.YearAssessed - ys.YearPaid);
+                var payments = await _context.Payments
+                    .Where(x => x.date.Year == firstAndLastDate.firstYearPayments.Year && x.date.Month == firstAndLastDate.firstYearPayments.Month)
+                    .ToListAsync();
+                if (payments != null)
+                {
+                    ys.YearPaid = payments.Sum(x => x.sum);
+                    ys.YearFinalBalance = ys.YearStartingBalance + (ys.YearAssessed - ys.YearPaid);
+                }
+                else
+                    ys.YearFinalBalance = ys.YearStartingBalance + ys.YearAssessed;
+
                 years.Add(ys);
                 firstAndLastDate.firstYear = firstAndLastDate.dt.AddYears(i);
                 firstAndLastDate.firstYearPayments = firstAndLastDate.dt2.AddYears(i);
