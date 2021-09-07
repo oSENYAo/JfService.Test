@@ -2,6 +2,7 @@
 using JFService.Service.CalculateForYear;
 using JFService.Shared;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,89 +57,78 @@ namespace JFService.Service
             }
             return months;
         }
+        public async Task<List<YearService>> ByYear()
+        {
 
+            var month = await Monts(808251);
+
+            var grouped = month
+                .OrderBy(x => x.periodMonth)
+                .GroupBy(x => x.periodMonth.Year)
+                .Select(x => new YearService
+                {
+                    periodYear = new System.DateTime(x.Key, 1, 1),
+                    YearStartingBalance = x.FirstOrDefault().MonthStartingBalance,
+                    YearAssessed = x.Sum(y => y.MonthAssessed),
+                    YearPaid = x.Sum(y => y.MonthPaid),
+                    YearFinalBalance = x.LastOrDefault().MonthFinalBalance
+                }).ToList();
+
+
+            return grouped;
+        }
         public async Task<List<QuarterService>> Quarters(int accId)
         {
-            var firstAndLastDate = await _find.FindDate(accId);
-
-            List<QuarterService> quarters = new List<QuarterService>();
-
-            int i = 3;
-            var initBalans = firstAndLastDate.InitialBalance;
-
-            while (firstAndLastDate.firstYear <= firstAndLastDate.lastYear)
-            {
-                QuarterService quarter = new QuarterService();
-                var yearCount = await _context.Balances.Where(x => x.DateTimePeriod.Month == firstAndLastDate.firstYear.Month).ToListAsync();
-                
-                if (i == 3)
-                    quarter.QuarterStartingBalance = initBalans;
-                else
-                    quarter.QuarterStartingBalance = quarters.Select(x => x.QarterFinalBalance).LastOrDefault();
-                    
-                quarter.QuarterAssessed = yearCount.Where(x => x.DateTimePeriod >= firstAndLastDate.firstYear).Take(3).Select(x => x.calculation).Sum();
-                quarter.periodQuarter = firstAndLastDate.firstYear;
-
-                var payments = _context.Payments
-                    .Where(x => x.date >= firstAndLastDate.firstYear).Take(3).Select(x => x.sum).Sum();
-                
-                if (true)
+            var month = await Monts(accId);
+           
+            var quarter = month
+                .OrderBy(x => x.periodMonth)
+                .GroupBy(x => new {x.periodMonth.Year, quartal = NumberQuarters(x.periodMonth)})
+                .Select(x => new QuarterService
                 {
-                    quarter.QuarterPaid = payments;
-                    quarter.QarterFinalBalance = quarter.QuarterStartingBalance + (quarter.QuarterAssessed - quarter.QuarterPaid);
-                }
-                //else
-                //    quarter.QarterFinalBalance = quarter.QuarterStartingBalance + quarter.QuarterAssessed;
+                    periodQuarter = new System.DateTime(x.Key.Year, x.Key.quartal, 1),
+                    QuarterStartingBalance = x.FirstOrDefault().MonthStartingBalance,
+                    QuarterAssessed = x.Sum(y => y.MonthAssessed),
+                    QuarterPaid = x.Sum(y => y.MonthPaid),
+                    QarterFinalBalance = x.LastOrDefault().MonthFinalBalance
+                }).ToList();
 
-                quarters.Add(quarter);
-                firstAndLastDate.firstYear = firstAndLastDate.dt.AddMonths(i);
-                firstAndLastDate.firstYearPayments = firstAndLastDate.dt2.AddMonths(i);
-                i += 3;
-            }
-            return quarters;
-
+            return quarter;
         }
 
         public async Task<List<YearService>> Years(int accId)
         {
-            var firstAndLastDate = await _find.FindDate(accId);
+            var month = await Monts(accId);
 
-            List<YearService> years = new List<YearService>();
-
-            int i = 1;
-            var initBalans = firstAndLastDate.InitialBalance;
-
-            while (firstAndLastDate.firstYear <= firstAndLastDate.lastYear)
-            {
-                YearService ys = new YearService();
-                var yearCount = await _context.Balances.Where(x => x.DateTimePeriod.Year == firstAndLastDate.firstYear.Year).ToListAsync();
-                
-                if (i == 1)
-                    ys.YearStartingBalance = initBalans;
-                else
-                    ys.YearStartingBalance = years.Select(x => x.YearFinalBalance).LastOrDefault();
-
-                ys.YearAssessed = yearCount.Where(x => x.DateTimePeriod == firstAndLastDate.firstYear).Select(x => x.calculation).FirstOrDefault();
-                ys.periodYear = firstAndLastDate.firstYear;
-
-                var payments = await _context.Payments
-                    .Where(x => x.date.Year == firstAndLastDate.firstYearPayments.Year && x.date.Month == firstAndLastDate.firstYearPayments.Month)
-                    .ToListAsync();
-                if (payments != null)
+            var grouped = month
+                .OrderBy(x => x.periodMonth)
+                .GroupBy(x => x.periodMonth.Year)
+                .Select(x => new YearService
                 {
-                    ys.YearPaid = payments.Sum(x => x.sum);
-                    ys.YearFinalBalance = ys.YearStartingBalance + (ys.YearAssessed - ys.YearPaid);
-                }
-                else
-                    ys.YearFinalBalance = ys.YearStartingBalance + ys.YearAssessed;
+                    periodYear = new System.DateTime(x.Key, 1, 1),
+                    YearStartingBalance = x.FirstOrDefault().MonthStartingBalance,
+                    YearAssessed = x.Sum(y => y.MonthAssessed),
+                    YearPaid = x.Sum(y => y.MonthPaid),
+                    YearFinalBalance = x.LastOrDefault().MonthFinalBalance
+                }).ToList();
 
-                years.Add(ys);
-                firstAndLastDate.firstYear = firstAndLastDate.dt.AddYears(i);
-                firstAndLastDate.firstYearPayments = firstAndLastDate.dt2.AddYears(i);
-                i++;
-            }
-            return years;
+
+            return grouped;
         }
+        public int NumberQuarters(DateTime date)
+        {
+            int quarter = (date.Month + 2) / 3;
 
+            return quarter;
+        }
+        public List<int> NameQuaretrs()
+        {
+            List<int> result = new List<int>();
+            for (int i = 1; i < 5; i++)
+            {
+                result.Add(i);
+            }
+            return result;
+        }
     }
 }
