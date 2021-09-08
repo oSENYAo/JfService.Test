@@ -1,4 +1,8 @@
 ﻿@model IndexViewModel
+@{
+    
+}
+
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -44,7 +48,7 @@
                                         @foreach (var item in Model.Years.OrderByDescending(x => x.periodYear))
                                         {
                                             <tr>
-                                                <td>@item.periodYear.ToString("dd:MMMM:yyyy")</td>
+                                                <td>@item.periodYear.ToString("yyyy") год</td>
                                                 <td>@item.YearStartingBalance</td>
                                                 <td>@item.YearAssessed</td>
                                                 <td>@item.YearPaid</td>
@@ -79,13 +83,32 @@
                                     <tbody>
                                         @foreach (var item in Model.Quarters.OrderByDescending(x => x.periodQuarter))
                                         {
-                                            <tr>
-                                                <td>@item.periodQuarter.ToString("dd:MMMM:yyyy")</td>
-                                                <td>@item.QuarterStartingBalance</td>
-                                                <td>@item.QuarterAssessed</td>
-                                                <td>@item.QuarterPaid</td>
-                                                <td>@item.QarterFinalBalance</td>
-                                            </tr>
+                                        <tr>
+                                            @{
+                                                int numberOfMonth = 1;
+                                                if (item.periodQuarter.Month == 1)
+                                                {
+                                                    <td>1 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                }
+                                                else if (item.periodQuarter.Month == 4)
+                                                {
+                                                    <td>2 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                }
+                                                else if (item.periodQuarter.Month == 7)
+                                                {
+                                                    <td>3 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                }
+                                                else if (item.periodQuarter.Month == 10)
+                                                {
+                                                    <td>4 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                }
+                                            }
+                                            <td>@item.QuarterStartingBalance</td>
+                                            <td>@item.QuarterAssessed</td>
+                                            <td>@item.QuarterPaid</td>
+                                            <td>@item.QarterFinalBalance</td>
+                                        </tr>
+                                            
                                         }
                                     </tbody>
                                 </table>
@@ -116,7 +139,7 @@
                                         @foreach (var item in Model.Months.OrderByDescending(x => x.periodMonth))
                                         {
                                             <tr>
-                                                <td>@item.periodMonth.ToString("dd:MMMM:yyyy")</td>
+                                                <td>@item.periodMonth.ToString("MMMM - yyyy")</td>
                                                 <td>@item.MonthStartingBalance</td>
                                                 <td>@item.MonthAssessed</td>
                                                 <td>@item.MonthPaid</td>

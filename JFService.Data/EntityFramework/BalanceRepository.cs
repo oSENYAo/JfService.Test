@@ -39,8 +39,8 @@ namespace JFService.Data.EntityFramework
         }
         public async Task UpdateDatabase()
         {
-            string jsonPayment = System.IO.File.ReadAllText(@"C:\Users\Razrab\Source\Repos\JfService.Test\JFService.Data\Source\payment_202105270827.json");
-            string jsonBalance = System.IO.File.ReadAllText(@"C:\Users\Razrab\Source\Repos\JfService.Test\JFService.Data\Source\balance_202105270825.json");
+            string jsonPayment = System.IO.File.ReadAllText(@"C:\Users\Razrab\source\repos\JfService.Test\JFService.Data\Source\payment_202105270827.json");
+            string jsonBalance = System.IO.File.ReadAllText(@"C:\Users\Razrab\source\repos\JfService.Test\JFService.Data\Source\balance_202105270825.json");
 
 
             List<Payment> payments = new List<Payment>();

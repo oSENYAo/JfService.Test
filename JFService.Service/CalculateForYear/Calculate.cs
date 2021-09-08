@@ -86,7 +86,7 @@ namespace JFService.Service
                 .GroupBy(x => new {x.periodMonth.Year, quartal = NumberQuarters(x.periodMonth)})
                 .Select(x => new QuarterService
                 {
-                    periodQuarter = new System.DateTime(x.Key.Year, x.Key.quartal, 1),
+                    periodQuarter = new System.DateTime(x.Key.Year, SelectMonth(x.Key.quartal), 1),
                     QuarterStartingBalance = x.FirstOrDefault().MonthStartingBalance,
                     QuarterAssessed = x.Sum(y => y.MonthAssessed),
                     QuarterPaid = x.Sum(y => y.MonthPaid),
@@ -121,6 +121,27 @@ namespace JFService.Service
 
             return quarter;
         }
+
+        public static int SelectMonth(int number)
+        {
+            if (number == 4)
+            {
+                return 10;
+            }
+            else if (number == 3)
+            {
+                return 7;
+            }
+            else if(number == 2)
+            {
+                return 4;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
         public List<int> NameQuaretrs()
         {
             List<int> result = new List<int>();
