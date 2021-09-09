@@ -33,9 +33,12 @@ namespace JfService.Core
             services.AddTransient<IBalanceRepository, BalanceRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<DataManager>();
+            services.AddTransient<Xml>();
+            services.AddTransient<Csv>();
+
             var dbOptions = new DbContextOptions<AppDbContext>();
             var dataManager = new DataManager(new PaymentRepository(new AppDbContext(dbOptions)), new BalanceRepository(new AppDbContext(dbOptions)));
-            var calculate = new Calculate(new AppDbContext(dbOptions), new FindDates(dataManager));
+            var calculate = new Calculate(new AppDbContext(dbOptions));
             services.AddTransient<FindDates>();
             services.AddTransient<ICalculate<YearService, MonthService, QuarterService>, Calculate>();
             

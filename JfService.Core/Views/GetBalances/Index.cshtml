@@ -1,6 +1,6 @@
 ﻿@model IndexViewModel
 @{
-    
+
 }
 
 <div class="container">
@@ -83,32 +83,32 @@
                                     <tbody>
                                         @foreach (var item in Model.Quarters.OrderByDescending(x => x.periodQuarter))
                                         {
-                                        <tr>
-                                            @{
-                                                int numberOfMonth = 1;
-                                                if (item.periodQuarter.Month == 1)
-                                                {
-                                                    <td>1 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                            <tr>
+                                                @{
+                                                    int numberOfMonth = 1;
+                                                    if (item.periodQuarter.Month == 1)
+                                                    {
+                                                        <td>1 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                    }
+                                                    else if (item.periodQuarter.Month == 4)
+                                                    {
+                                                        <td>2 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                    }
+                                                    else if (item.periodQuarter.Month == 7)
+                                                    {
+                                                        <td>3 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                    }
+                                                    else if (item.periodQuarter.Month == 10)
+                                                    {
+                                                        <td>4 квартал @item.periodQuarter.ToString("yyyy")</td>
+                                                    }
                                                 }
-                                                else if (item.periodQuarter.Month == 4)
-                                                {
-                                                    <td>2 квартал @item.periodQuarter.ToString("yyyy")</td>
-                                                }
-                                                else if (item.periodQuarter.Month == 7)
-                                                {
-                                                    <td>3 квартал @item.periodQuarter.ToString("yyyy")</td>
-                                                }
-                                                else if (item.periodQuarter.Month == 10)
-                                                {
-                                                    <td>4 квартал @item.periodQuarter.ToString("yyyy")</td>
-                                                }
-                                            }
-                                            <td>@item.QuarterStartingBalance</td>
-                                            <td>@item.QuarterAssessed</td>
-                                            <td>@item.QuarterPaid</td>
-                                            <td>@item.QarterFinalBalance</td>
-                                        </tr>
-                                            
+                                                <td>@item.QuarterStartingBalance</td>
+                                                <td>@item.QuarterAssessed</td>
+                                                <td>@item.QuarterPaid</td>
+                                                <td>@item.QarterFinalBalance</td>
+                                            </tr>
+
                                         }
                                     </tbody>
                                 </table>
@@ -156,3 +156,24 @@
         </div>
     </div>
 </div>
+
+
+<form asp-action="XmlForMonths" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за месяц (XML)" />
+</form>
+<form asp-action="XmlForQuarter" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за квартал (XML)" />
+</form>
+<form asp-action="XmlForYear" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за год (XML)" />
+</form>
+<form asp-action="CsvForMonths" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за месяц (Csv)" />
+</form>
+<form asp-action="CsvForQuarter" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за квартал (Csv)" />
+</form>
+<form asp-action="CsvForYear" asp-controller="GetBalances">
+    <input type="submit" value="Скачать данные за год (Csv)" />
+</form>
+

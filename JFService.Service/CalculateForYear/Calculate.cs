@@ -12,17 +12,15 @@ namespace JFService.Service
     public class Calculate : ICalculate<YearService, MonthService, QuarterService>
     {
         private readonly AppDbContext _context;
-        private readonly FindDates _find;
-
-        public Calculate(AppDbContext context, FindDates find)
+        
+        public Calculate(AppDbContext context)
         {
             _context = context;
-            _find = find;
         }
 
         public async Task<List<MonthService>> Monts(int accId)
         {
-            var firstAndLastDate = await _find.FindDate(accId);
+            var firstAndLastDate = await FindDate(accId);
 
             List<MonthService> months = new List<MonthService>();
 
@@ -150,6 +148,42 @@ namespace JFService.Service
                 result.Add(i);
             }
             return result;
+        }
+        public async Task<FirstAndLastDate> FindDate(int accId)
+        {
+            // Balances
+            var firstbalans = await _context.Balances.OrderBy(x => x.DateTimePeriod).FirstOrDefaultAsync(x => x.account_id == accId);
+            var lastBalans = await _context.Balances.OrderByDescending(x => x.DateTimePeriod).FirstOrDefaultAsync(x => x.account_id == accId);
+
+            // Payments
+            var firstPayments = await _context.Payments.OrderBy(x => x.date).FirstOrDefaultAsync(x => x.account_id == accId);
+            var lastPayments = await _context.Payments.OrderByDescending(x => x.date).FirstOrDefaultAsync(x => x.account_id == accId);
+
+            // dates
+            var firstYearPayments = firstPayments.date;
+            var lastYearPayments = lastPayments.date;
+
+            //initial balance
+            var initBalance = firstbalans.in_balance;
+
+
+            var firstYear = firstbalans.DateTimePeriod;
+            var lastYear = lastBalans.DateTimePeriod;
+            DateTime dt = firstYear;
+            DateTime dt2 = firstYearPayments;
+
+            FirstAndLastDate firstAndLastDate = new FirstAndLastDate
+            {
+                firstYear = firstYear,
+                lastYear = lastYear,
+                firstYearPayments = firstYearPayments,
+                lastYearPayments = lastYearPayments,
+                dt = dt,
+                dt2 = dt2,
+                InitialBalance = initBalance
+            };
+
+            return firstAndLastDate;
         }
     }
 }
